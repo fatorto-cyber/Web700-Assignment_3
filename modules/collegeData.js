@@ -65,3 +65,25 @@ module.exports.getCourses = () => {
         }
     });
 };
+
+function getStudentsByCourse(course) {
+    return new Promise((resolve, reject) => {
+        let filteredStudents = students.filter(student => student.course == course);
+        if (filteredStudents.length > 0) {
+            resolve(filteredStudents);
+        } else {
+            reject("no results returned");
+        }
+    });
+}
+
+function getStudentByNum(num) {
+    return new Promise((resolve, reject) => {
+        let student = students.find(student => student.studentNum == num);
+        if (student) {
+            resolve(student);
+        } else {
+            reject("no results returned");
+        }
+    });
+}
