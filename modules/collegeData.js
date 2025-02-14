@@ -32,7 +32,7 @@ module.exports.initialize = () => {
     });
 };
 
-// Retrieve all students
+/*  // Retrieve all students
 module.exports.getAllStudents = () => {
     return new Promise((resolve, reject) => {
         if (dataCollection.students.length > 0) {
@@ -87,3 +87,37 @@ function getStudentByNum(num) {
         }
     });
 }
+*/
+
+module.exports = {
+    initialize: function () {
+      return new Promise((resolve, reject) => {
+        resolve("Data Initialized");
+      });
+    },
+    getAllStudents: function () {
+      return new Promise((resolve, reject) => {
+        resolve([]);
+      });
+    },
+    getStudentsByCourse: function (course) {
+      return new Promise((resolve, reject) => {
+        resolve([]);
+      });
+    },
+    getTAs: function () {
+      return new Promise((resolve, reject) => {
+        resolve([]);
+      });
+    },
+    getCourses: function () {
+      return new Promise((resolve, reject) => {
+        resolve([]);
+      });
+    },
+    getStudentByNum: function (num) {
+      return new Promise((resolve, reject) => {
+        resolve({});
+      });
+    }
+  };

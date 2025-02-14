@@ -1,4 +1,4 @@
-var HTTP_PORT = process.env.PORT || 8080;
+/*var HTTP_PORT = process.env.PORT || 8080;
 var express = require("express");
 var app = express();
 
@@ -10,3 +10,76 @@ app.get("/", (req, res) => {
 // setup http server to listen on HTTP_PORT
 app.listen(HTTP_PORT, ()=>{console.log("server listening on port: " + HTTP_PORT)});
 
+*/
+
+var HTTP_PORT = process.env.PORT || 8080;
+var express = require("express");
+var path = require("path");
+var collegeData = require("./modules/collegeData.js");
+
+var app = express();
+
+// GET /students - Returns all students or students by course
+app.get("/students", (req, res) => {
+    if (req.query.course) {
+        collegeData.getStudentsByCourse(req.query.course)
+            .then((students) => res.json(students))
+            .catch(() => res.json({ message: "no results" }));
+    } else {
+        collegeData.getAllStudents()
+            .then((students) => res.json(students))
+            .catch(() => res.json({ message: "no results" }));
+    }
+});
+
+// GET /tas - Returns all TAs
+app.get("/tas", (req, res) => {
+    collegeData.getTAs()
+        .then((tas) => res.json(tas))
+        .catch(() => res.json({ message: "no results" }));
+});
+
+// GET /courses - Returns all courses
+app.get("/courses", (req, res) => {
+    collegeData.getCourses()
+        .then((courses) => res.json(courses))
+        .catch(() => res.json({ message: "no results" }));
+});
+
+// GET /student/:num - Returns a student by student number
+app.get("/student/:num", (req, res) => {
+    collegeData.getStudentByNum(req.params.num)
+        .then((student) => res.json(student))
+        .catch(() => res.json({ message: "no results" }));
+});
+
+// GET / - Returns home.html
+app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "/views/home.html"));
+});
+
+// GET /about - Returns about.html
+app.get("/about", (req, res) => {
+    res.sendFile(path.join(__dirname, "/views/about.html"));
+});
+
+// GET /htmlDemo - Returns htmlDemo.html
+app.get("/htmlDemo", (req, res) => {
+    res.sendFile(path.join(__dirname, "/views/htmlDemo.html"));
+});
+
+// Handle 404 - No Matching Route
+app.use((req, res) => {
+    res.status(404).send("Page Not Found");
+});
+
+// Initialize collegeData before starting the server
+collegeData.initialize()
+    .then(() => {
+        app.listen(HTTP_PORT, () => {
+            console.log("server listening on port: " + HTTP_PORT);
+        });
+    })
+    .catch((err) => {
+        console.log("Error initializing data: " + err);
+    });
